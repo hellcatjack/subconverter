@@ -1,6 +1,11 @@
 name: Publish Docker Image
-on: [push]
-
+on: 
+ push:
+    branches: [ "master" ]
+    paths: 
+      - 'custom*'
+ workflow_dispatch:
+ 
 concurrency: 
   group: ${{ github.ref }}-${{ github.workflow }}
   cancel-in-progress: true
