@@ -955,7 +955,7 @@ void explodeClash(Node yamlnode, std::vector<Proxy> &nodes)
     std::string plugin, pluginopts, pluginopts_mode, pluginopts_host, pluginopts_mux; //ss
     std::string protocol, protoparam, obfs, obfsparam; //ssr
 	std::string up, down; //hysteria
-	std::vector<std::string> apln;
+	std::vector<std::string> alpn; //hysteria
     std::string user; //socks
     tribool udp, tfo, scv;
     Node singleproxy;
