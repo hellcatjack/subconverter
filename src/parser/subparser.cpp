@@ -115,7 +115,7 @@ void snellConstruct(Proxy &node, const std::string &group, const std::string &re
     node.SnellVersion = version;
 }
 
-void HysteriaConstruct(Proxy &node, const std::string &group, const std::string &remarks, const std::string &server, const std::string &port, const std::string &protocol, const std::string &password, uint16_t up, uint16_t down, const std::string &alpn, const std::string &obfs, tribool udp, tribool tfo, tribool scv)
+void HysteriaConstruct(Proxy &node, const std::string &group, const std::string &remarks, const std::string &server, const std::string &port, const std::string &protocol, const std::string &password, const std::string &up, const std::string &down, const std::string &alpn, const std::string &obfs, tribool udp, tribool tfo, tribool scv)
 {
 	commonConstruct(node, ProxyType::Hysteria, group, remarks, server, port, udp, tfo, scv, tribool());
 	node.Password = password;
