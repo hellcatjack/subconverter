@@ -116,7 +116,7 @@ bool applyMatcher(const std::string &rule, std::string &real_rule, const Proxy &
     std::string target, ret_real_rule;
     static const std::string groupid_regex = R"(^!!(?:GROUPID|INSERT)=([\d\-+!,]+)(?:!!(.*))?$)", group_regex = R"(^!!(?:GROUP)=(.+?)(?:!!(.*))?$)";
     static const std::string type_regex = R"(^!!(?:TYPE)=(.+?)(?:!!(.*))?$)", port_regex = R"(^!!(?:PORT)=(.+?)(?:!!(.*))?$)", server_regex = R"(^!!(?:SERVER)=(.+?)(?:!!(.*))?$)";
-    static const string_array types = {"", "SS", "SSR", "VMESS", "TROJAN", "SNELL", "HTTP", "HTTPS", "SOCKS5"};
+    static const string_array types = {"", "SS", "SSR", "VMESS", "TROJAN", "SNELL", "HYSTERIA", "HTTP", "HTTPS", "SOCKS5"};
     if(startsWith(rule, "!!GROUP="))
     {
         regGetMatch(rule, group_regex, 3, 0, &target, &ret_real_rule);
@@ -437,6 +437,23 @@ void proxyToClash(std::vector<Proxy> &nodes, YAML::Node &yamlnode, const ProxyGr
             if(std::all_of(x.Password.begin(), x.Password.end(), ::isdigit) && !x.Password.empty())
                 singleproxy["password"].SetTag("str");
             break;
+		case ProxyType::Hysteria:
+			singleproxy["type"] = "hysteria";
+			singleproxy["protocol"] = x.Protocol;
+			singleproxy["up"] = x.up;
+			singleproxy["down"] = x.down;
+			singleproxy["alpn"] = x.alpn;
+			if (!x.Password.empty())
+			{
+				singleproxy["auth_str"] = x.Password;
+				if (std::all_of(x.Password.begin(), x.Password.end(), ::isdigit))
+					singleproxy["auth_str"].SetTag("str");
+			}
+			if (!x.OBFS.empty())
+				singleproxy["obfs"] = x.OBFS;
+			if (!scv.is_undef())
+				singleproxy["skip-cert-verify"] = scv.get();
+			break;
         default:
             continue;
         }

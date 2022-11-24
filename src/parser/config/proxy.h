@@ -15,6 +15,7 @@ enum ProxyType
     VMess,
     Trojan,
     Snell,
+	Hysteria,
     HTTP,
     HTTPS,
     SOCKS5
@@ -34,6 +35,8 @@ inline String getProxyTypeName(int type)
         return "Trojan";
     case ProxyType::Snell:
         return "Snell";
+	case ProxyType::Hysteria:
+		return "Hysteria";
     case ProxyType::HTTP:
         return "HTTP";
     case ProxyType::HTTPS:
@@ -73,6 +76,10 @@ struct Proxy
     String Host;
     String Path;
     String Edge;
+
+	String up;
+	String down;
+	String alpn;
 
     String QUICSecure;
     String QUICSecret;
