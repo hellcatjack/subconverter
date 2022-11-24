@@ -1153,6 +1153,16 @@ void explodeClash(Node yamlnode, std::vector<Proxy> &nodes)
 
             snellConstruct(node, group, ps, server, port, password, obfs, host, to_int(aid, 0), udp, tfo, scv);
             break;
+		case "hysteria"_hash:
+			group = SS_DEFAULT_GROUP;
+			singleproxy["password"] >>= password;
+			singleproxy["protocol"] >>= protocol;
+			singleproxy["obfs"] >>= obfs;
+			singleproxy["up"] >>= up;
+			singleproxy["down"] >>= down;
+			singleproxy["alpn"] >>= alpn;
+			HysteriaConstruct(node, group, ps, server, port, protocol, password, up, down, alpn, obfs, udp, tfo, scv);
+			break;
         default:
             continue;
         }
