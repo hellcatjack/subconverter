@@ -79,7 +79,7 @@ struct Proxy
 
 	String up;
 	String down;
-	String alpn;
+	std::vector<std::string> alpn;
 
     String QUICSecure;
     String QUICSecret;

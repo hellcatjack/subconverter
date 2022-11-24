@@ -115,7 +115,7 @@ void snellConstruct(Proxy &node, const std::string &group, const std::string &re
     node.SnellVersion = version;
 }
 
-void HysteriaConstruct(Proxy &node, const std::string &group, const std::string &remarks, const std::string &server, const std::string &port, const std::string &protocol, const std::string &password, const std::string &up, const std::string &down, const std::string &alpn, const std::string &obfs, tribool udp, tribool tfo, tribool scv)
+void HysteriaConstruct(Proxy &node, const std::string &group, const std::string &remarks, const std::string &server, const std::string &port, const std::string &protocol, const std::string &password, const std::string &up, const std::string &down, const std::vector<std::string> &alpn, const std::string &obfs, tribool udp, tribool tfo, tribool scv)
 {
 	commonConstruct(node, ProxyType::Hysteria, group, remarks, server, port, udp, tfo, scv, tribool());
 	node.Password = password;
@@ -954,7 +954,8 @@ void explodeClash(Node yamlnode, std::vector<Proxy> &nodes)
     std::string type = "none", id, aid = "0", net = "tcp", path, host, edge, tls, sni; //vmess
     std::string plugin, pluginopts, pluginopts_mode, pluginopts_host, pluginopts_mux; //ss
     std::string protocol, protoparam, obfs, obfsparam; //ssr
-	std::string up, down, alpn; //hysteria
+	std::string up, down; //hysteria
+	std::vector<std::string> apln;
     std::string user; //socks
     tribool udp, tfo, scv;
     Node singleproxy;
