@@ -133,6 +133,7 @@ bool applyMatcher(const std::string &rule, std::string &real_rule, const Proxy &
         {ProxyType::Shadowsocks,  "SS"},
         {ProxyType::ShadowsocksR, "SSR"},
         {ProxyType::VMess,        "VMESS"},
+        {ProxyType::VLESS,        "VLESS"},
         {ProxyType::Trojan,       "TROJAN"},
         {ProxyType::Snell,        "SNELL"},
         {ProxyType::HTTP,         "HTTP"},
@@ -381,6 +382,82 @@ void proxyToClash(std::vector<Proxy> &nodes, YAML::Node &yamlnode, const ProxyGr
             default:
                 continue;
             }
+            break;
+        case ProxyType::VLESS:
+            singleproxy["type"] = "vless";
+            singleproxy["uuid"] = x.UserId;
+            singleproxy["tls"] = x.TLSSecure;
+            if(!x.ServerName.empty())
+                singleproxy["servername"] = x.ServerName;
+            if(!x.ClientFingerprint.empty())
+                singleproxy["client-fingerprint"] = x.ClientFingerprint;
+            if(!x.PacketEncoding.empty())
+                singleproxy["packet-encoding"] = x.PacketEncoding;
+            switch(hash_(x.TransferProtocol))
+            {
+            case "tcp"_hash:
+                break;
+            case "ws"_hash:
+                singleproxy["network"] = x.TransferProtocol;
+                if(ext.clash_new_field_name)
+                {
+                    singleproxy["ws-opts"]["path"] = x.Path;
+                    if(!x.Host.empty())
+                        singleproxy["ws-opts"]["headers"]["Host"] = x.Host;
+                    if(!x.Edge.empty())
+                        singleproxy["ws-opts"]["headers"]["Edge"] = x.Edge;
+                }
+                else
+                {
+                    singleproxy["ws-path"] = x.Path;
+                    if(!x.Host.empty())
+                        singleproxy["ws-headers"]["Host"] = x.Host;
+                    if(!x.Edge.empty())
+                        singleproxy["ws-headers"]["Edge"] = x.Edge;
+                }
+                break;
+            case "http"_hash:
+                singleproxy["network"] = x.TransferProtocol;
+                singleproxy["http-opts"]["method"] = "GET";
+                singleproxy["http-opts"]["path"].push_back(x.Path);
+                if(!x.Host.empty())
+                    singleproxy["http-opts"]["headers"]["Host"].push_back(x.Host);
+                if(!x.Edge.empty())
+                    singleproxy["http-opts"]["headers"]["Edge"].push_back(x.Edge);
+                break;
+            case "h2"_hash:
+                singleproxy["network"] = x.TransferProtocol;
+                singleproxy["h2-opts"]["path"] = x.Path;
+                if(!x.Host.empty())
+                    singleproxy["h2-opts"]["host"].push_back(x.Host);
+                break;
+            case "grpc"_hash:
+                singleproxy["network"] = x.TransferProtocol;
+                if(!x.Host.empty())
+                    singleproxy["servername"] = x.Host;
+                singleproxy["grpc-opts"]["grpc-service-name"] = x.Path;
+                break;
+            case "xhttp"_hash:
+                singleproxy["network"] = x.TransferProtocol;
+                singleproxy["xhttp-opts"]["path"] = x.Path;
+                if(!x.Host.empty())
+                    singleproxy["xhttp-opts"]["host"] = x.Host;
+                if(!x.TransportMode.empty())
+                    singleproxy["xhttp-opts"]["mode"] = x.TransportMode;
+                break;
+            default:
+                continue;
+            }
+            if(x.Security == "reality")
+            {
+                if(x.RealityPublicKey.empty())
+                    continue;
+                singleproxy["reality-opts"]["public-key"] = x.RealityPublicKey;
+                if(!x.RealityShortId.empty())
+                    singleproxy["reality-opts"]["short-id"] = x.RealityShortId;
+            }
+            if(!scv.is_undef())
+                singleproxy["skip-cert-verify"] = scv.get();
             break;
         case ProxyType::ShadowsocksR:
             //ignoring all nodes with unsupported obfs, protocols and encryption

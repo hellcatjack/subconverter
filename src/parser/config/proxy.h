@@ -15,6 +15,7 @@ enum class ProxyType
     Shadowsocks,
     ShadowsocksR,
     VMess,
+    VLESS,
     Trojan,
     Snell,
     HTTP,
@@ -35,6 +36,8 @@ inline String getProxyTypeName(ProxyType type)
         return "SSR";
     case ProxyType::VMess:
         return "VMess";
+    case ProxyType::VLESS:
+        return "VLESS";
     case ProxyType::Trojan:
         return "Trojan";
     case ProxyType::Snell:
@@ -78,8 +81,14 @@ struct Proxy
     String UserId;
     uint16_t AlterId = 0;
     String TransferProtocol;
+    String TransportMode;
     String FakeType;
     bool TLSSecure = false;
+    String Security;
+    String ClientFingerprint;
+    String PacketEncoding;
+    String RealityPublicKey;
+    String RealityShortId;
 
     String Host;
     String Path;
@@ -132,6 +141,7 @@ struct Proxy
 #define SS_DEFAULT_GROUP "SSProvider"
 #define SSR_DEFAULT_GROUP "SSRProvider"
 #define V2RAY_DEFAULT_GROUP "V2RayProvider"
+#define VLESS_DEFAULT_GROUP "VLESSProvider"
 #define SOCKS_DEFAULT_GROUP "SocksProvider"
 #define HTTP_DEFAULT_GROUP "HTTPProvider"
 #define TROJAN_DEFAULT_GROUP "TrojanProvider"

@@ -1,8 +1,9 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
 PROJECT(subconverter LANGUAGES CXX)
 SET(BUILD_TARGET_NAME ${PROJECT_NAME})
-CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 INCLUDE_DIRECTORIES("${CMAKE_SOURCE_DIR}/include/")
+INCLUDE(CTest)
 
 IF(NOT CMAKE_BUILD_TYPE)
     SET(CMAKE_BUILD_TYPE Release)
@@ -153,6 +154,26 @@ TARGET_COMPILE_DEFINITIONS(${BUILD_TARGET_NAME} PRIVATE -DPCRE2_STATIC)
 
 IF(WIN32)
     TARGET_LINK_LIBRARIES(${BUILD_TARGET_NAME} PRIVATE ws2_32)
+ENDIF()
+
+IF(BUILD_TESTING)
+ADD_EXECUTABLE(vless_reality_xhttp_test
+    tests/vless_reality_xhttp_test.cpp)
+TARGET_LINK_LIBRARIES(vless_reality_xhttp_test PRIVATE ${BUILD_TARGET_NAME} ${YAML_CPP_LIBRARY} ${PCRE2_LIBRARY})
+TARGET_COMPILE_DEFINITIONS(vless_reality_xhttp_test PRIVATE -DNO_JS_RUNTIME)
+ADD_TEST(NAME vless_reality_xhttp_test COMMAND vless_reality_xhttp_test)
+
+FIND_PACKAGE(CURL 7.54.0 REQUIRED)
+ADD_EXECUTABLE(data_uri_vless_subscription_test
+    tests/data_uri_vless_subscription_test.cpp
+    src/handler/webget.cpp)
+TARGET_LINK_LIBRARIES(data_uri_vless_subscription_test PRIVATE ${BUILD_TARGET_NAME} ${YAML_CPP_LIBRARY} ${PCRE2_LIBRARY} CURL::libcurl)
+TARGET_COMPILE_DEFINITIONS(data_uri_vless_subscription_test PRIVATE -DNO_JS_RUNTIME)
+ADD_TEST(NAME data_uri_vless_subscription_test COMMAND data_uri_vless_subscription_test)
+
+IF(NOT WIN32)
+ADD_TEST(NAME build_entrypoints_smoke COMMAND bash ${CMAKE_SOURCE_DIR}/tests/build_entrypoints_smoke.sh)
+ENDIF()
 ENDIF()
 
 ENDIF() #BUILD_STATIC_LIBRARY

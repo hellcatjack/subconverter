@@ -13,6 +13,7 @@ Utility to convert between various proxy subscription formats.
 
 - [subconverter](#subconverter)
   - [Supported Types](#supported-types)
+  - [Development Builds](#development-builds)
   - [Quick Usage](#quick-usage)
     - [Access Interface](#access-interface)
     - [Description](#description)
@@ -37,6 +38,9 @@ Utility to convert between various proxy subscription formats.
 | Surge 3      |     ✓      |      ✓       | surge&ver=3 |
 | Surge 4      |     ✓      |      ✓       | surge&ver=4 |
 | V2Ray        |     ✓      |      ✓       | v2ray       |
+| VLESS        |     ✓      |      ✓       | clash / clashr / surge / quan / quanx / loon |
+| Hysteria     |     ✓      |      ✓       | clash / clashr / singbox |
+| Hysteria2    |     ✓      |      ✓       | clash / clashr / singbox |
 | Telegram-liked HTTP/Socks 5 links |     ✓      |      ×       | Only as source |
 
 Notice:
@@ -49,6 +53,36 @@ Notice:
 
    - https://t.me/http?server=1.2.3.4&port=233&user=user&pass=pass&remark=Example
 
+
+---
+
+## Development Builds
+
+For parser/export development only:
+
+```bash
+cmake --preset core-dev
+cmake --build --preset core-dev
+ctest --preset core-dev
+```
+
+For the full Linux server binary on Debian/Ubuntu:
+
+```bash
+./scripts/bootstrap.debian.release.sh
+cmake --preset full-release
+cmake --build --preset full-release
+```
+
+The bootstrap script installs missing non-distro dependencies into `.deps/linux-release` and leaves system packages to `apt`.
+
+For the static Linux release binary used in deployment packages:
+
+```bash
+./scripts/build.alpine.release.sh
+```
+
+This build path produces `base/subconverter` as a fully static release binary. The bundled curl is built with the OpenSSL backend so external HTTPS config fetches such as `config=https://...` continue to work in production deployments.
 
 ---
 

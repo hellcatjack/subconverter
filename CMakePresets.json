@@ -1,0 +1,52 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "base-release",
+      "hidden": true,
+      "generator": "Unix Makefiles",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "core-dev",
+      "inherits": "base-release",
+      "binaryDir": "${sourceDir}/build/core-dev",
+      "cacheVariables": {
+        "BUILD_STATIC_LIBRARY": "ON",
+        "BUILD_TESTING": "ON"
+      }
+    },
+    {
+      "name": "full-release",
+      "inherits": "base-release",
+      "binaryDir": "${sourceDir}/build/full-release",
+      "environment": {
+        "PKG_CONFIG_PATH": "${sourceDir}/.deps/linux-release/lib/pkgconfig:${sourceDir}/.deps/linux-release/lib64/pkgconfig:$penv{PKG_CONFIG_PATH}"
+      },
+      "cacheVariables": {
+        "CMAKE_PREFIX_PATH": "${sourceDir}/.deps/linux-release"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "core-dev",
+      "configurePreset": "core-dev"
+    },
+    {
+      "name": "full-release",
+      "configurePreset": "full-release"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "core-dev",
+      "configurePreset": "core-dev",
+      "output": {
+        "outputOnFailure": true
+      }
+    }
+  ]
+}
